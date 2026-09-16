@@ -4,7 +4,9 @@ using StudentAPI.Infrastructure.Context;
 
 namespace StudentAPI.Application.Service
 {
-    public class StudentServices(IStudentRepositories studentRepositories) : IStudentService
+    public class StudentServices(
+        IStudentRepositories studentRepositories,
+        ILogger<StudentServices> logger) : IStudentService
     {
         public async Task<BaseResponse<IEnumerable<StudentDto>>> GetAllStudentsAsync()
         {
@@ -28,9 +30,9 @@ namespace StudentAPI.Application.Service
             }
             catch (Exception ex)
             {
-                return BaseResponse<IEnumerable<StudentDto>>.Fail(
-                    $"An error occurred: {ex.Message}"
-                );
+                logger.LogError(ex, "An error occurred while retrieving all students.");
+
+                return BaseResponse<IEnumerable<StudentDto>>.Fail("An unexpected error occurred while retrieving students.");
             }
         }
 
@@ -62,7 +64,9 @@ namespace StudentAPI.Application.Service
             }
             catch (Exception ex)
             {
-                return BaseResponse<StudentDto?>.Fail($"An error occurred: {ex.Message}");
+                logger.LogError(ex, "An error occurred while retrieving student with ID {Id}.", id);
+
+                return BaseResponse<StudentDto?>.Fail("An unexpected error occurred while retrieving the student.");
             }
         }
 
@@ -85,7 +89,9 @@ namespace StudentAPI.Application.Service
             }
             catch (Exception ex)
             {
-                return BaseResponse<bool>.Fail($"An error occurred: {ex.Message}");
+                logger.LogError(ex, "An error occurred while creating a student.");
+
+                return BaseResponse<bool>.Fail("An unexpected error occurred while creating the student.");
             }
         }
 
@@ -113,7 +119,9 @@ namespace StudentAPI.Application.Service
             }
             catch (Exception ex)
             {
-                return BaseResponse<bool>.Fail($"An error occurred: {ex.Message}");
+                logger.LogError(ex, "An error occurred while updating student with ID {Id}.", dto.Id);
+
+                return BaseResponse<bool>.Fail("An unexpected error occurred while updating the student.");
             }
         }
 
@@ -137,3 +145,4 @@ namespace StudentAPI.Application.Service
         }
     }
 }
+
