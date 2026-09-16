@@ -1,22 +1,34 @@
 using Microsoft.EntityFrameworkCore;
-using StudentAPI.Data;
+using StudentAPI;
+using StudentAPI.Application.Service;
+using StudentAPI.Infrastructure.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
+// Add Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Add Repository to the Container
+builder.Services.AddScoped<IStudentRepositories, StudentRepositories>();
+
+// Add services to the container
+builder.Services.AddScoped<IStudentService, StudentServices>();
+
+// Add SQL Server
+builder.Services.AddSqlServer<ApplicationDbContext>(
+    builder.Configuration.GetConnectionString("DefaultConnection")
+);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
-   
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
