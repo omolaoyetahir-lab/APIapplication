@@ -10,7 +10,7 @@ public interface IStudentRepositories
 {
     Task<List<Student>> GetAllAsync();
     Task<Student?> GetByIdAsync(Guid id);
-    Task<bool> CreateAsync(Guid id, Student student);
+    Task<bool> CreateAsync( Student student);
     Task<bool> UpdateAsync(Guid id, Student student);
     Task<bool> DeleteAsync(Guid id, Student student);
 }

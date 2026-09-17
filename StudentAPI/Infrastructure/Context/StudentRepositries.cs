@@ -19,7 +19,7 @@ namespace StudentAPI.Infrastructure.Context
             return student;
         }
 
-        public async Task<bool> CreateAsync(Guid id, Student student)
+        public async Task<bool> CreateAsync( Student student)
         {
             context.Students.Add(student);
 
